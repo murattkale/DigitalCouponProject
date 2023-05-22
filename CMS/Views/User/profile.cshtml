@@ -1,0 +1,79 @@
+﻿@{
+    var rowUser = ViewBag.postModel as User;
+    var EnumText = "User";
+
+    var dynamicRow = new DynamicModel
+            {
+                model = rowUser == null || rowUser.Id < 1 ? new User() { } : rowUser,
+                controllerName = rowUser == null ? new User().GetType().Name : rowUser.GetType().Name,
+                PageType = "User",
+                titleName = EnumText + " " + (rowUser?.Id > 0 ? "Update".Trans() : "Create".Trans()),
+                InsertMethodName = "InsertOrUpdate",
+                labelClass = "col-md-4",
+                inputClass = "col-md-8",
+                colClass = "col-md-6",
+                nonProp = "OrderNo",
+                orderby = "",
+                addBtn = "<input type='submit' value='" + (rowUser?.Id > 0 ? "Update".Trans() : "Create".Trans()) + "' " + "class='btn btn-primary btn-shadow-hover font-weight-bold mr-2' />",
+                //removeBtn = $"<input dataid='{rowUser?.Id}' type='button' value='Delete' class='btnDelete btn btn-danger btn-shadow-hover font-weight-bold mr-2' />",
+                whereCase = "",
+                disabledProp = "",
+                BackUrl = $"$alert={"Information updated successfully"}"
+
+            };
+
+}
+<script type="text/javascript">
+    var rowUser = @Html.Raw(Json.Serialize(rowUser));
+</script>
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Subheader-->
+    <div class="subheader py-5 py-lg-10 gutter-b subheader-transparent" id="kt_subheader" style="background: linear-gradient(90deg, rgba(226,99,44,1) 0%, rgba(232,129,49,1) 40%, rgba(231,153,59,1) 100%);">
+        <div class="container d-flex flex-column">
+            <!--begin::Title-->
+            <div class="d-flex align-items-sm-end flex-column flex-sm-row">
+                <h2 class="d-flex align-items-center text-white mr-5 mb-0">
+                    <!--begin::Mobile Toggle-->
+                    <button class="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none" id="kt_subheader_mobile_toggle">
+                        <span></span>
+                    </button>
+                    <!--end::Mobile Toggle-->
+                    @Html.Raw("My profile".Trans())
+                </h2>
+            </div>
+            <!--end::Title-->
+            <!--begin::Search Bar-->
+            <!--end::Search Bar-->
+        </div>
+    </div>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Profile Personal Information-->
+            <div class="d-flex flex-row">
+                <partial name="../User/usermenu" />
+
+
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                @await Component.InvokeAsync("DynamicInput", dynamicRow)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!--end::Profile Personal Information-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+<!--end::Content-->

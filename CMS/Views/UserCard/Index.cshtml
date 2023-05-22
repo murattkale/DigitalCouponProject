@@ -1,0 +1,191 @@
+﻿
+
+<div class="row">
+    <div class="col-xl-12">
+        <!--begin::Advance Table Widget 10-->
+        <div class="card card-custom gutter-b card-stretch">
+            <!--begin::Header-->
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label font-weight-bolder text-dark">@Html.Raw("Pysical Card")</span>
+                </h3>
+            </div>
+            <!--end::Header-->
+            <div class="card-body py-0">
+
+                <div class="d-flex align-items-center">
+                    <div class="form-group">
+                        <label>@Html.Raw("Select".Trans() + "Membership".Trans())</label>
+                        <select id="dp_Membership" name="dp_Membership" class="form-control  form-control-lg"></select>
+                    </div>
+                    <div class="switch switch-sm">
+                        <label style="padding:5px;" class="checkbox font-weight-bold px-3 font-size-base">
+                            @SessionRequest.Trans("Passive User/Active User ")  <input name="projectSwitchAccess" id="projectSwitchAccess" type="checkbox">
+                            <span class="customColor" style="background-color: #366055;"></span>
+                        </label>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <input placeholder="Count" class="form-control  form-control-lg" type="number" id="txtCount" name="txtCount" />
+                    </div>
+                    <div class="col-md-2">
+                        <a href="#" class="btnCard btn btn-light-primary font-weight-bolder btn-sm">@Html.Raw("New User Cards Bulk".Trans())</a>
+
+                    </div>
+                </div>
+                <hr />
+               
+                <div class="table-responsive">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+    var table;
+    $(function () {
+
+        $('.btnCard').click(function () {
+            ;
+            var count = toInt($('#txtCount').val());
+            var mid = toInt($('#dp_Membership').val());
+            if ($('#txtCount').val() == '') {
+                alerts('Enter Count');
+                return;
+            }
+            if ($('#dp_Membership').val() == '') {
+                alerts('Enter Membership');
+                return;
+            }
+
+            $.get('/UserCard/BulkInsert?MemberShips=' + mid + '&count=' + count, function (res) {
+                if (res.RType == 1) {
+                    getGrid();
+                    alerts('User Card Added');
+                }
+                else {
+                    alerts(res.MessageList);
+                }
+
+            });
+        });
+
+        $("#dp_Membership").addOptionAjax("/MemberShip/GetSelect", null, "value", "text", null, null, "", "", LangSelect + ' ' + "@Html.Raw("Membership".Trans()) ");
+
+
+
+        $('#dp_Membership').change(function () {
+            getGrid();
+        });
+
+        $('#projectSwitchAccess').change(function () {
+            getGrid();
+        });
+
+        getGrid();
+
+        function getGrid() {
+
+
+            var columns = [];
+            if ($('#projectSwitchAccess')[0].checked == true)
+                columns.push({ "data": "User", text: "USER" });
+            columns.push({ "data": "MemberShipName", text: "MEMBERSHIP" });
+            columns.push({ "data": "QrCode", text: "CARD NUMBER CODE" });
+            columns.push({ "data": "CreaDate", text: "CREATED DATE" });
+            columns.push({ "data": "ModDate", text: "UPDATED DATE" });
+
+            $('.table-responsive').html('');
+            $('.table-responsive').html(' <table id="dt_UserCard" class="table table-bordered table-hover table-checkable"><thead><tr></tr></thead></table>');
+
+            var clm = '';
+            $.each(columns, function (i, item) {
+                clm += ('<td>' + item.text + '</td>');
+            });
+            $('#dt_UserCard' + ' thead tr').append(clm);
+
+            table = $('#dt_UserCard').DataTable({
+                "dom": 'lBfrtip',
+                "buttons": ['copy', 'csv', 'excel', 'pdf'],
+                "language": { "url": "/Base/getDtLang" },
+                "ajax": {
+                    "url": '/UserCard/' + ($('#projectSwitchAccess')[0].checked == true ? 'GetPaging' : 'GetPagingNotUser'),
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (searchModel) {
+                        $('#dt_UserCard').LoadingOverlay("show");
+                        searchModel.selectid = $('#dp_Membership').val();
+
+                    },
+                    "dataSrc": function (json) {
+                        return_data = new Array();
+                        var data = json.data;
+                        $.each(data, function (i, row) {
+                            var detail = '<a class="btn btn-sm btn-clean btn-icon btn-icon-md" href="/UserCard/InsertOrUpdatePage?id=' + row.Id + '" title="EDIT"><i class="la la-edit"></i></a>';
+
+                            detail += '<a dataid="' + row.Id + '" class="btnDelete btn btn-sm btn-danger btn-icon btn-icon-md" href="#" title="DELETE"><i class="la la-remove"></i></a>';
+                            if ($('#projectSwitchAccess')[0].checked == true)
+                                return_data.push({
+                                    'User': toStr(row.User?.UserName),
+                                    'MemberShipName': toStr(row.MemberShip.Name),
+                                    'QrCode': toStr(row.QrCode),
+                                    'CreaDate': moment(row.CreaDate).format('DD/MM/YYYY HH:MM'),
+                                    'ModDate': moment(row.ModDate).format('DD/MM/YYYY HH:MM'),
+                                });
+
+                            else
+                                return_data.push({
+                                    'MemberShipName': toStr(row.MemberShip.Name),
+                                    'QrCode': toStr(row.QrCode),
+                                    'CreaDate': moment(row.CreaDate).format('DD/MM/YYYY HH:MM'),
+                                    'ModDate': moment(row.ModDate).format('DD/MM/YYYY HH:MM'),
+                                });
+
+                        });
+                        $('#dt_UserCard').LoadingOverlay("hide");
+                        return return_data;
+                    }
+                },
+                "fnDrawCallback": function (settings, json) {
+
+
+                    //$('.dt-buttons').css('float', 'right');
+                    //$('.dt-buttons').css('margin-left', '20px');
+                    //$('.dt-buttons').css('margin-top', '16px');
+
+                    $(table).LoadingOverlay("hide");
+
+                },
+                "destroy": true,
+                "caseInsensitive": true,
+                "serverSide": true,
+                
+                "pageLength": 10,
+                "DisplayLength": 5,
+                "lengthMenu": [[10, 2000, 5000], [10, 2000, 5000]],
+                "lengthChange": true,
+                "processing": true,
+                "order": [[0, "desc"]],
+                "columns": columns,
+
+            });
+
+
+
+
+        }
+
+
+
+
+
+    });
+</script>

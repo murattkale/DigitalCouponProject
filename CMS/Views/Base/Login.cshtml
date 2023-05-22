@@ -1,0 +1,456 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html lang="en">
+<!--begin::Head-->
+<head>
+
+    <meta charset="utf-8" />
+    <title>@Html.Raw(@HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").Title)</title>
+    <meta name="description" content="@Html.Raw(@HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").Title)" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!--begin::Fonts-->
+    @*<link rel="stylesheet" href="~/content/css/css.css?family=Poppins:300,400,500,600,700">*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+
+    <!--end::Fonts-->
+    <!--begin::Page Custom Styles(used by this page)-->
+    <link href="@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/css/pages/login/login-1.css" rel="stylesheet" type="text/css" />
+    <!--end::Page Custom Styles-->
+    <!--begin::Global Theme Styles(used by all pages)-->
+    <link href="@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Global Theme Styles-->
+    <!--begin::Layout Themes(used by all pages)-->
+    <!--end::Layout Themes-->
+    <link rel="shortcut icon" href="~/images/favicon.png" />
+
+
+    <link href="https://fonts.cdnfonts.com/css/montserrat" rel="stylesheet">
+
+
+    <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#8950FC", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#E1E9FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+    <!--end::Global Config-->
+    <!--begin::Global Theme Bundle(used by all pages)-->
+    <script src="@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/plugins/global/plugins.bundle.js"></script>
+    <script src="@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+    <script src="@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/js/scripts.bundle.js"></script>
+    <!--end::Global Theme Bundle-->
+    <!--begin::Page Scripts(used by this page)-->
+    <!--end::Page Scripts-->
+
+    <script src="~/content/js/loadingoverlay.min.js" type="text/javascript"></script>
+    <script src="~/content/js/general.js"></script>
+
+
+
+   
+
+</head>
+<!--end::Head-->
+<!--begin::Body-->
+<body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled page-loading">
+    <!--begin::Main-->
+    <div class="d-flex flex-column flex-root">
+        <!--begin::Login-->
+        <div style="background-color:#00a79d;" class="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid" id="kt_login">
+            <!--begin::Aside-->
+          
+            <div class="login-aside d-flex flex-column flex-row-auto" style="background-color: white;">
+                <!--begin::Aside Top-->
+                <br><br> <br><br><br><br><br><br><br><br><br><br>
+                <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
+
+                    <h1 class="font-weight-bolder text-center" style="color: black; font-family: 'Montserrat';font-size: 4rem !important;">
+                      @Html.Raw("Welcome To".Trans())
+                    </h1>
+                    <!--begin::Aside header-->
+                    <a href="#" class="text-center mt-20">
+                        <img  src="~/images/logoXL.png"  alt="">
+                    </a>
+                    <!--end::Aside header-->
+                    <!--begin::Aside title-->
+                   
+                    <!--end::Aside title-->
+                </div>
+                <!--end::Aside Top-->
+                <!--begin::Aside Bottom-->
+                <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center" ></div>
+                <!--end::Aside Bottom-->
+            </div>
+            <!--begin::Aside-->
+            <!--begin::Content-->
+            <div class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto">
+                <!--begin::Content body-->
+                <div class="d-flex flex-column-fluid flex-center">
+                    <!--begin::Signin-->
+                    <div class="login-form login-signin">
+                        <!--begin::Form-->
+                        <form class="form" novalidate="novalidate" id="kt_login_signin_form">
+                            <!--begin::Title-->
+                            <div class="pb-13 pt-lg-0 pt-5">
+                                <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@Html.Raw("Please enter your login info:".Trans()) @*@Html.Raw(@HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").Title)*@</h3>
+                                <span class="text-muted font-weight-bold font-size-h4">
+                                    @*New Here?
+                                    <a href="javascript:;" id="kt_login_signup" class="text-primary font-weight-bolder">Create an Account</a>*@
+                                </span>
+                            </div>
+                            <!--begin::Title-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <label class="font-size-h6 font-weight-bolder text-dark">@Html.Raw("E-mail".Trans())</label>
+                                <input class="form-control form-control-solid h-auto py-6 px-6 rounded-lg" placeholder="@Html.Raw("E-mail".Trans())" type="email" name="username" id="username" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between mt-n5">
+                                    <label class="font-size-h6 font-weight-bolder text-dark pt-5">@Html.Raw("Password".Trans())</label>
+                                    <a href="javascript:;" style="color:black;" class="font-weight-bolder text-hover-primary pt-6" id="kt_login_forgot">@Html.Raw("Forgot my password".Trans())</a>
+                                </div>
+                                <input class="form-control form-control-solid h-auto py-6 px-6 rounded-lg" placeholder="@Html.Raw("Password".Trans())" type="password" name="pass" id="pass" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Action-->
+                            <div class="pb-lg-0 pb-5">
+                                <button type="button" id="kt_login_signin_submit" class="btn btn btn-light font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">@Html.Raw("Login".Trans())</button>
+                                <!--<button type="button" class="btn btn-light-primary font-weight-bolder px-8 py-4 my-3 font-size-lg">
+                                    <span class="svg-icon svg-icon-md">-->
+                                <!--begin::Svg Icon | path:@Html.Raw(@Html.Raw(HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").layoutUrl))/assets/media/svg/social-icons/google.svg-->
+                                <!--<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M19.9895 10.1871C19.9895 9.36767 19.9214 8.76973 19.7742 8.14966H10.1992V11.848H15.8195C15.7062 12.7671 15.0943 14.1512 13.7346 15.0813L13.7155 15.2051L16.7429 17.4969L16.9527 17.5174C18.879 15.7789 19.9895 13.221 19.9895 10.1871Z" fill="#4285F4" />
+                                    <path d="M10.1993 19.9313C12.9527 19.9313 15.2643 19.0454 16.9527 17.5174L13.7346 15.0813C12.8734 15.6682 11.7176 16.0779 10.1993 16.0779C7.50243 16.0779 5.21352 14.3395 4.39759 11.9366L4.27799 11.9466L1.13003 14.3273L1.08887 14.4391C2.76588 17.6945 6.21061 19.9313 10.1993 19.9313Z" fill="#34A853" />
+                                    <path d="M4.39748 11.9366C4.18219 11.3166 4.05759 10.6521 4.05759 9.96565C4.05759 9.27909 4.18219 8.61473 4.38615 7.99466L4.38045 7.8626L1.19304 5.44366L1.08875 5.49214C0.397576 6.84305 0.000976562 8.36008 0.000976562 9.96565C0.000976562 11.5712 0.397576 13.0882 1.08875 14.4391L4.39748 11.9366Z" fill="#FBBC05" />
+                                    <path d="M10.1993 3.85336C12.1142 3.85336 13.406 4.66168 14.1425 5.33717L17.0207 2.59107C15.253 0.985496 12.9527 0 10.1993 0C6.2106 0 2.76588 2.23672 1.08887 5.49214L4.38626 7.99466C5.21352 5.59183 7.50242 3.85336 10.1993 3.85336Z" fill="#EB4335" />
+                                </svg>-->
+                                <!--end::Svg Icon-->
+                                <!--</span>Sign in with Google
+                                </button>-->
+                            </div>
+                            <!--end::Action-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Signin-->
+                    <!--begin::Signup-->
+                    <!--end::Signup-->
+                    <!--begin::Forgot-->
+                    <div class="login-form login-forgot">
+                        <!--begin::Form-->
+                        <form class="form" novalidate="novalidate" id="kt_login_forgot_form">
+                            <!--begin::Title-->
+                            <div class="pb-13 pt-lg-0 pt-5">
+                                <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@Html.Raw("Forgot my password".Trans())</h3>
+                                <p class="text-muted font-weight-bold font-size-h4">@Html.Raw("Enter your email to reset your password".Trans())</p>
+                            </div>
+                            <!--end::Title-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <input class="form-control form-control-solid h-auto py-6 px-6 rounded-lg font-size-h6" type="email" placeholder="@Html.Raw("Email".Trans())" name="email" id="email" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group d-flex flex-wrap pb-lg-0">
+                                <button type="button" id="kt_login_forgot_submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">@Html.Raw("Submit".Trans())</button>
+                            </div>
+                            <!--end::Form group-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Forgot-->
+                </div>
+                <!--end::Content body-->
+                <!--begin::Content footer-->
+                @*<div class="d-flex justify-content-lg-start justify-content-center align-items-end py-7 py-lg-0">
+                <div class="text-dark-50 font-size-lg font-weight-bolder mr-10">
+                <a href="/" class="text-dark-75 text-hover-primary">@Html.Raw(@HttpContextAccessor.HttpContext.Session.Get<SiteConfig>("config").Copyright)</a>
+                </div>
+
+                </div>*@
+                <!--end::Content footer-->
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Login-->
+    </div>
+    <!--end::Main-->
+    <!--begin::Global Config(global config for global JS scripts)-->
+
+
+
+
+    <script type="text/javascript">
+
+
+        function forgot() {
+            if ($('#email').val().trim() == "") {
+                swal.fire({
+                    text: "@Html.Raw("Send Mail Forgot".Trans())",
+                    icon: "success",
+                    buttonsStyling: false,
+                    confirmButtonText: "@Html.Raw("please try again".Trans())",
+                    customClass: {
+                        confirmButton: "btn font-weight-bold btn-light-primary"
+                    }
+                }).then(function () {
+                    KTUtil.scrollTop();
+                });
+            }
+            $.ajx('/Base/SendForgot', { email: $('#email').val().trim() }, function (result) {
+                if (result != null && result != "" && result=="OK") {
+
+                    swal.fire({
+                        text: "@Html.Raw("Send Mail Forgot".Trans())",
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "@Html.Raw("Ok".Trans())",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+
+                    // Submit form
+                    KTUtil.scrollTop();
+
+                    $('#email').val('');
+                }
+                else {
+                    swal.fire({
+                        text: '@Html.Raw("The e-mail you entered is not registered in the system".Trans())',
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "@Html.Raw("Ok".Trans())",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+                }
+
+            });
+
+        }
+
+
+        function UserLogin() {
+            $.ajx('/Base/Validate', { user: $('#username').val().trim(), pass: $('#pass').val().trim() }, function (result) {
+
+                if (result != null && result != "") {
+
+                    swal.fire({
+                        text: "@Html.Raw("Login Success".Trans())",
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "@Html.Raw("Ok".Trans())",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+
+                    // Submit form
+                    KTUtil.scrollTop();
+
+                    location.href = result;
+                }
+                else {
+                    swal.fire({
+                        text: "@Html.Raw("Login failed, please try again.".Trans())",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "@Html.Raw("Ok".Trans())",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+                }
+
+            });
+        }
+
+        // Class Definition
+        var KTLogin = function () {
+            var _login;
+
+            var _showForm = function (form) {
+                var cls = 'login-' + form + '-on';
+                var form = 'kt_login_' + form + '_form';
+
+                _login.removeClass('login-forgot-on');
+                _login.removeClass('login-signin-on');
+                _login.removeClass('login-signup-on');
+
+                _login.addClass(cls);
+
+                KTUtil.animateClass(KTUtil.getById(form), 'animate__animated animate__backInUp');
+            }
+
+            var _handleSignInForm = function () {
+                var validation;
+
+                // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
+                validation = FormValidation.formValidation(
+                    KTUtil.getById('kt_login_signin_form'),
+                    {
+                        fields: {
+                            username: {
+                                validators: {
+                                    notEmpty: {
+                                        message: '@Html.Raw("Username is required".Trans())'
+                                    }
+                                }
+                            },
+                            password: {
+                                validators: {
+                                    notEmpty: {
+                                        message: '@Html.Raw("Password is required".Trans())'
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            submitButton: new FormValidation.plugins.SubmitButton(),
+                            //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                            bootstrap: new FormValidation.plugins.Bootstrap()
+                        }
+                    }
+                );
+
+                $(document).on('keypress', function (e) {
+                    if (e.which == 13) {
+                        validation.validate().then(function (status) {
+                            if (status == 'Valid') {
+
+                                UserLogin();
+
+
+                            } else {
+                                swal.fire({
+                                    text: "@Html.Raw("Login failed, please try again.".Trans())",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok".Trans(),
+                                    customClass: {
+                                        confirmButton: "btn font-weight-bold btn-light-primary"
+                                    }
+                                }).then(function () {
+                                    KTUtil.scrollTop();
+                                });
+                            }
+                        });
+                    }
+                });
+
+                $('#kt_login_signin_submit').on('click', function (e) {
+                    e.preventDefault();
+
+                    validation.validate().then(function (status) {
+                        if (status == 'Valid') {
+
+                            UserLogin();
+
+
+                        } else {
+                            swal.fire({
+                                text: "@Html.Raw("Login failed, please try again.".Trans())",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok".Trans(),
+                                customClass: {
+                                    confirmButton: "btn font-weight-bold btn-light-primary"
+                                }
+                            }).then(function () {
+                                KTUtil.scrollTop();
+                            });
+                        }
+                    });
+                });
+
+                // Handle forgot button
+                $('#kt_login_forgot').on('click', function (e) {
+                    e.preventDefault();
+                    _showForm('forgot');
+                });
+
+                // Handle signup
+                $('#kt_login_signup').on('click', function (e) {
+                    e.preventDefault();
+                    _showForm('signup');
+                });
+            }
+
+
+            var _handleForgotForm = function (e) {
+                var validation;
+
+                // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
+                validation = FormValidation.formValidation(
+                    KTUtil.getById('kt_login_forgot_form'),
+                    {
+                        fields: {
+                            email: {
+                                validators: {
+                                    notEmpty: {
+                                        message: '@Html.Raw("Email address is required".Trans())'
+                                    },
+                                    emailAddress: {
+                                        message: '@Html.Raw("The value is not a valid email address".Trans())'
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            bootstrap: new FormValidation.plugins.Bootstrap()
+                        }
+                    }
+                );
+
+                // Handle submit button
+                $('#kt_login_forgot_submit').on('click', function (e) {
+                    e.preventDefault();
+                    forgot();
+                });
+
+                // Handle cancel button
+                $('#kt_login_forgot_cancel').on('click', function (e) {
+                    e.preventDefault();
+
+                    _showForm('signin');
+                });
+            }
+
+            // Public Functions
+            return {
+                // public functions
+                init: function () {
+                    _login = $('#kt_login');
+
+                    _handleSignInForm();
+                    _handleForgotForm();
+                }
+            };
+        }();
+
+        // Class Initialization
+        jQuery(document).ready(function () {
+            KTLogin.init();
+
+        });
+
+
+    </script>
+
+</body>
+<!--end::Body-->
+</html>

@@ -1,0 +1,319 @@
+﻿@{
+    Layout = null;
+    var DocName = Context.Request.Query["name"].ToStr();
+    var ids = Context.Request.Query["id"].ToStr();
+    var imageid = Context.Request.Query["imageid"].ToStr();
+    var cont = Context.Request.Query["cont"].ToStr();
+    var ImageType = Context.Request.Query["ImageType"].ToStr();
+    var DocType = Context.Request.Query["DocType"].ToStr();
+
+}
+
+
+<script>
+
+    var DocName = "@DocName";
+    var ids = "@ids";
+    var cont = "@cont";
+    var ImageType = "@ImageType";
+    var DocType = "@DocType";
+    var imageid = "@imageid";
+
+
+</script>
+
+<style>
+    .image-preview {
+        position: relative;
+        vertical-align: top;
+        height: 45px;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-12">
+        <div id="filemanager"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="btn btn-light-success font-weight-bolder btn-hover-bg-secondary" style="margin: 20px;  margin-bottom: 0px;">
+            <a href="#" id="btnFileAdd_@Html.Raw(DocName+"_"+ids)" class="btn-bg-success">
+                @Html.Raw("Save".Trans())
+            </a>
+        </div>
+
+        <div class="btn btn-light-danger font-weight-bolder btn-hover-bg-secondary" style=" margin: 20px;  margin-bottom: 0px;">
+            <a href="#" class="btnCloseModal btn-bg-danger">
+                @Html.Raw("Close".Trans())
+            </a>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    var DocList = [];
+    var elSingle = "";
+    $(document).ready(function () {
+        $("#filemanager").kendoFileManager({
+            dataSource: {
+                schema: kendo.data.schemas.filemanager,
+                transport: {
+                    read: {
+                        url: "/FileManagerData/Read",
+                        method: "POST"
+                    },
+                    create: {
+                        url: "/FileManagerData/Create",
+                        method: "POST"
+                    },
+                    update: {
+                        url: "/FileManagerData/Update",
+                        method: "POST"
+                    },
+                    destroy: {
+                        url: "/FileManagerData/Destroy",
+                        method: "POST"
+                    }
+                }
+            },
+            uploadUrl: '/FileManagerData/Upload',
+            toolbar: {
+                createFolder: "New Folder",
+                upload: "Upload",
+                sortDirection: "Sort Direction",
+                sortDirectionAsc: "Sort Direction Ascending",
+                sortDirectionDesc: "Sort Direction Descending",
+                sortField: "Sort By",
+                nameField: "Name",
+                sizeField: "File Size",
+                typeField: "Type",
+                dateModifiedField: "Date Modified",
+                dateCreatedField: "Date Created",
+                listView: "List View",
+                gridView: "Grid View",
+                search: "Search",
+                details: "View Details",
+                detailsChecked: "On",
+                detailsUnchecked: "Off",
+                "delete": "Delete",
+                rename: "Rename",
+                items: [
+                    { name: "createFolder" },
+                    { name: "upload" },
+                    { name: "sortField" },
+                    { name: "changeView" },
+                    { name: "spacer" },
+                    { name: "details" },
+                    { name: "search" },
+                ]
+            },
+            contextMenu: {
+                items: [
+                    { name: "rename" },
+                    { name: "delete" }
+                ]
+            },
+            draggable: true,
+            resizable: true,
+            //dataBound: onDataBound,
+            //drop: onDrop,
+            //execute: onExecute,
+            //navigate: onNavigate,
+            //command: onCommand
+            open: onOpen,
+            select: onSelect,
+
+        });
+    });
+
+
+
+    function onOpen(el) {
+        console.log(el);
+        try {
+            ;
+            elSingle = el.entry.path;
+            var fileImageUrl = siteConfig.layoutUrlBase + "/fileupload/UserFiles/Folders/" + el.entry.path;
+
+            $('#file_image_' + DocName + '').css('background', "url('" + fileImageUrl + "')");
+            $('#file_link_' + DocName + '').val(el.entry.path);
+            $('#file_link_' + DocName + '').css('background-repeat', 'no-repeat');
+            $('#file_link_' + DocName + '').css('background-position', 'center center');
+
+
+        } catch (e) {
+            console.log(e);
+        }
+
+        return;
+    }
+
+    function onSelect(el) {
+        DocList = [];
+
+        $.each(el.entries, function (i, item) {
+
+
+            DocList.push(
+                {
+                    Id: imageid,
+                    Link: item.path,
+                    Name: item.name,
+                    Desc: item.title,
+                    Size: item.size,
+                    PartnerId: DocName == "PartnerDocument" ? ids : null,
+                    GalleryId: DocName == "Gallery" ? ids : null,
+                    DocumentId: DocName == "Documents" ? ids : null,
+                    ThumbImageId: DocName == "ThumbImage" ? ids : null,
+                    BannerImageId: DocName == "BannerImage" ? ids : null,
+                    PictureImageId: DocName == "PictureImage" ? ids : null,
+
+                }
+            );
+
+        });
+
+
+        var elem = el.entries[0];
+        if (elem.extension == ".svg" || elem.extension == ".SVG" || elem.extension == ".png" || elem.extension == ".jpg" || elem.extension == ".PNG" || elem.extension == ".JPG" || elem.extension == ".jpeg" || elem.extension == ".JPEG") {
+            var fileImageUrl = siteConfig.layoutUrlBase + "/fileupload/UserFiles/Folders/" + elem.path;
+            $('.k-file-info>.k-file-preview>.k-file-icon.k-icon.k-i-file-image').removeClass('k-i-file-image')
+
+            $('.k-file-info>.k-file-preview>.k-file-icon.k-icon').css('background', 'url(' + fileImageUrl + ')');
+            $('.k-file-info>.k-file-preview>.k-file-icon.k-icon').css('background-repeat', 'no-repeat');
+            $('.k-file-info>.k-file-preview>.k-file-icon.k-icon').css('background-position', 'center center');
+
+            //$("#window").data("kendoWindow").center().open();
+        }
+
+    }
+
+
+
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $('.btnCloseModal').click(function () {
+            $('#ajaxSub').modal('toggle');
+        });
+
+
+        var filemanager = $("#filemanager").getKendoFileManager();
+        filemanager.executeCommand({ command: "TogglePaneCommand", options: { type: "preview" } });
+        filemanager.toolbar.fileManagerDetailsToggle.switchInstance.toggle();
+
+
+        $('#btnFileAdd_' + DocName + '_' + ids).click(function (el) {
+            try {
+                if (cont != "Gallery" && cont != 'Documents' && cont != "PartnerDocument") {
+                    $('#file_link_' + DocName + '').val(elSingle);
+                    $('#file_image_' + DocName + '').css('background', "url('/fileupload/UserFiles/Folders/" + elSingle + "')");
+                    $('#file_link_' + DocName + '').css('background-repeat', 'no-repeat');
+                    $('#file_link_' + DocName + '').css('background-position', 'center center');
+
+                    $('#ajaxSub').modal('toggle');
+                }
+                else {
+                    $.ajx('/' + cont + '/SaveMultiDoc', { DocList: DocList, }, function (resultData) {
+                        console.log(resultData);
+                        if (resultData.indexOf("Err-") > -1) {
+                            if (resultData.indexOf("duplicate")) {
+                                alert("Duplicate");
+                            }
+                            else {
+                                alert("Error: " + resultData);
+                            }
+
+                        }
+                        else {
+                            try {
+
+                                location.reload();
+
+
+                            } catch (e) {
+
+                            }
+                            //alert('Success');
+
+                        }
+
+
+                    });
+                }
+
+
+
+
+            } catch (e) {
+                console.log(e);
+
+            }
+        });
+
+
+
+    });
+
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var filemanagerNS = kendo.ui.filemanager;
+        function downloadURI(uri, name) {
+            var link = document.createElement("a");
+            // If you don't know the name or want to use
+            // the webserver default set name = ''
+            link.setAttribute('download', name);
+            link.href = uri;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        }
+
+
+        filemanagerNS.commands.DownloadCommand = filemanagerNS.FileManagerCommand.extend({
+            exec: function () {
+                var that = this,
+                    filemanager = that.filemanager, // get the kendo.ui.FileManager instance
+                    options = that.options, // get the options passed through the tool
+                    target = options.target // options.target is available only when command is executed from the context menu
+                selectedFiles = filemanager.getSelected(); // get the selected files
+
+                downloadURI("../fileupload/UserFiles/Folders/" + selectedFiles[0].path, selectedFiles[0].path.split('/')[selectedFiles[0].path.split('/').length - 1]);
+
+            }
+        });
+
+        filemanagerNS.commands.MyCustomCommand = filemanagerNS.FileManagerCommand.extend({
+            exec: function () {
+                var that = this,
+                    filemanager = that.filemanager, // get the kendo.ui.FileManager instance
+                    options = that.options, // get the options passed through the tool
+                    target = options.target, // options.target is available only when command is executed from the context menu
+                    selectedFiles = filemanager.getSelected(); // get the selected files
+
+                var totalSize = 0;
+                selectedFiles.forEach(function (fileEntry) {
+                    totalSize += fileEntry.size;
+                });
+
+                kendo.alert(selectedFiles.length + ' file(s) selected; Total size: ' + kendo.getFileSizeMessage(totalSize))
+            }
+        });
+
+    });
+
+</script>

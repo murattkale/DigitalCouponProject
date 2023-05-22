@@ -1,0 +1,142 @@
+﻿@{
+    Layout = null;
+    var urlPath_CouponMemberShip = "CouponMemberShip";
+    var ListName_CouponMemberShip = "Membership".Trans();
+
+}
+
+<script>
+    var urlPath_CouponMemberShip = '@urlPath_CouponMemberShip';
+    var id1_CouponMemberShip = @Context.Request.Query["id"].ToStr();
+    var ListName_CouponMemberShip = "@ListName_CouponMemberShip";
+</script>
+
+
+
+<!--begin::Profile Personal Information-->
+<div class="d-flex flex-row">
+
+    <!--begin::Content-->
+    <div class="flex-row-fluid ml-lg-12">
+        <!--begin::Card-->
+        <div class="card card-custom card-stretch">
+            <!--begin::Header-->
+            <div class="card-header py-3">
+                <div class="card-title align-items-start flex-column">
+                    <h3 class="card-label font-weight-bolder text-dark">@Html.Raw(ListName_CouponMemberShip)</h3>
+                    <span class="text-muted font-weight-bold font-size-sm mt-1">@SessionRequest.Trans("Update")</span>
+                </div>
+
+
+            </div>
+            <!--end::Header-->
+            <!--begin::Form-->
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="kt-portlet">
+                            <div class="kt-portlet__body">
+                                <select id="@urlPath_CouponMemberShip" class="@urlPath_CouponMemberShip kt-dual-listbox" multiple>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--end::Body-->
+
+        </div>
+    </div>
+    <!--end::Content-->
+</div>
+<!--end::Profile Personal Information-->
+
+
+
+
+<script>
+
+    $(function () {
+
+        setdataFunc();
+        function setdataFunc() {
+            $("." + urlPath_CouponMemberShip).each(function () {
+                var t = $(this),
+                    a = null != t.attr("data-available-title") ? t.attr("data-available-title") : ListName_CouponMemberShip + " " + LangList,
+                    e = null != t.attr("data-selected-title") ? t.attr("data-selected-title") : LangEklenen + " " + ListName_CouponMemberShip + " " + LangList,
+                    l = null != t.attr("data-add") ? t.attr("data-add") : LangAddSelected,
+                    d = null != t.attr("data-remove") ? t.attr("data-remove") : LangDeleteSelected,
+                    i = null != t.attr("data-add-all") ? t.attr("data-add-all") : LangAddAll,
+                    o = null != t.attr("data-remove-all") ? t.attr("data-remove-all") : LangDeleteAll,
+                    n = [];
+
+
+
+                $.LoadingOverlay("show");
+                $.ajx(urlPath_CouponMemberShip + "/getData", { id1: id1_CouponMemberShip }, function (resultData) {
+                    $.each(resultData.ResultList, function (i, item) {
+                        var optionsAll = $("<option></option>").attr("value", item.value).text(item.text);
+                        if (item.selected)
+                            $(optionsAll).attr('selected', "selected");
+                        $(t).append(optionsAll);
+                    });
+
+
+
+                    var r = null != t.attr("data-search") ? t.attr("data-search") : "";
+
+                    var s = new DualListbox(t.get(0), {
+                        addEvent: function (tt) {
+                            $.LoadingOverlay("show");
+                            $.ajx(urlPath_CouponMemberShip + "/setData", { id1: id1_CouponMemberShip, id2: tt, type: 'add' }, function (resultData) {
+
+                                if (resultData.RType == 1) {
+
+                                }
+                                else {
+                                    
+                                    alert(resultData.Message);
+                                    location.reload();
+                                }
+
+                                $.LoadingOverlay("hide");
+                            }, function () { location.reload(); });
+                        },
+                        removeEvent: function (tt) {
+                            $.LoadingOverlay("show");
+                            $.ajx(urlPath_CouponMemberShip + "/setData", { id1: id1_CouponMemberShip, id2: tt, type: 'remove' }, function (resultData) {
+                                $.LoadingOverlay("hide");
+                            }, function () { });
+                        },
+                        availableTitle: a,
+                        selectedTitle: e,
+                        addButtonText: l,
+                        removeButtonText: d,
+                        addAllButtonText: i,
+                        removeAllButtonText: o,
+                        options: n
+                    });
+
+                    "false" == r && s.search.classList.add("dual-listbox__search--hidden");
+
+
+                    //$('.dual-listbox__buttons .dual-listbox__button')[0].remove()
+                    //$('.dual-listbox__buttons .dual-listbox__button')[2].remove()
+
+
+                    $.LoadingOverlay("hide");
+                }, function () { location.reload(); });
+
+
+
+
+            });
+      }
+
+
+    });
+</script>
+
+

@@ -1,0 +1,131 @@
+﻿
+<div class="row">
+    <div class="col-xl-12">
+        <!--begin::Advance Table Widget 10-->
+        <div class="card card-custom gutter-b card-stretch">
+            <!--begin::Header-->
+           
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label font-weight-bolder text-dark">@Html.Raw("Pupuler Partners")</span>
+                </h3>
+            </div>
+            <div class="card-body py-0">
+                <div class="table-responsive">
+                    <table id="dt_PartnerLast" class="table table-bordered table-hover table-checkable">
+                        <thead>
+                            <tr>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+    $(function () {
+
+     
+
+        getGridLast();
+
+        function getGridLast() {
+            var columns = [];
+            columns.push({ "data": "CreaDate", text: "DATE REGISTERED" });
+            columns.push({ "data": "BusinessLegalName", text: "BUSINESSLEGALNAME" });
+            columns.push({ "data": "ExecutiveName", text: "EXECUTIVE" });
+            columns.push({ "data": "BusinessTypePartnerNames", text: "CATEGORIES" });
+            columns.push({ "data": "Mail", text: "E-MAIL" });
+            columns.push({ "data": "IsStatus", text: "STATUS" });
+
+            columns.push({ "data": "ActiveMonths", text: "MONTHS LEFT" });
+            columns.push({ "data": "DATEOFCONTRACT", text: "DATE OF CONTRACT" });
+            columns.push({ "data": "EXPIREDDATE", text: "EXPIRED DATE" });
+            columns.push({ "data": "LASTEXPIREDDATE", text: "EXPIRED MONTHS" });
+
+
+            columns.push({ "data": "ACTIONS", text: "Detail" });
+
+            $.each(columns, function (i, item) {
+                $('#dt_PartnerLast' + ' thead tr').append('<td>' + item.text + '</td>');
+            });
+
+            var table = $('#dt_PartnerLast').DataTable({
+                "language": { "url": "/Base/getDtLang" },
+                "ajax": {
+                    "url": '/Partner/GetPaging',
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (searchModel) {
+                        $('#dt_PartnerLast').LoadingOverlay("show");
+                        searchModel.pagingSearchParam = 'Name';
+                        searchModel.IsBool = true;
+
+                    },
+                    "dataSrc": function (json) {
+                        return_data = new Array();
+                        var data = json.data;
+                        $.each(data, function (i, row) {
+
+                            ;
+                            var startDate = new Date(row.CreaDate);
+                            var detail = '<a class="btn btn-sm btn-clean btn-icon btn-icon-md" href="/Partner/InsertOrUpdatePage?id=' + row.Id + '" title="Edit"><i class="la la-edit"></i></a>';
+                            return_data.push({
+                                'CreaDate': moment(row.CreaDate).format('DD/MM/YYYY'),
+                                'BusinessLegalName': toStr(row.BusinessLegalName),
+                                'ExecutiveName': toStr(row.ExecutiveName),
+                                'BusinessTypePartnerNames': toStr(row.BusinessTypePartnerNames),
+                                'Mail': toStr(row.Mail),
+                                'IsStatus': row.IsStateName,
+                                'ActiveMonths': row.ActiveMonths,
+                                'DATEOFCONTRACT': moment(startDate).format('DD/MM/YYYY'),
+                                'EXPIREDDATE': moment(row.EXPIREDDATE).format('DD/MM/YYYY'),
+                                'LASTEXPIREDDATE': row.LASTEXPIREDDATE,
+                                //'REMAININGDAYS': ay_farki + ' Months,' + gun_farki + ' day',
+                                'ACTIONS': detail,
+                            });
+
+                        });
+                        $('#dt_PartnerLast').LoadingOverlay("hide");
+                        return return_data;
+                    }
+                },
+                "fnDrawCallback": function (settings, json) {
+
+
+                    $('.dt-buttons').css('float', 'right');
+                    $('.dt-buttons').css('margin-left', '20px');
+                    $('.dt-buttons').css('margin-top', '16px');
+
+                    $(table).LoadingOverlay("hide");
+
+                },
+                "destroy": true,
+                "caseInsensitive": true,
+                "serverSide": true,
+                
+                "pageLength": 10,
+                "DisplayLength": 10,
+                "lengthMenu": [[10, 25, 100, 1000, 2500, 5000], [10, 25, 100, 1000, 2500, 5000]],
+                "lengthChange": true,
+                "processing": true,
+                "order": [[9, "asc"]],
+                "columns": columns,
+
+            });
+
+
+
+
+        }
+
+
+
+
+    });
+</script>

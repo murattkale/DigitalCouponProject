@@ -1,0 +1,108 @@
+﻿
+<div class="row">
+    <div class="col-xl-12">
+        <!--begin::Advance Table Widget 10-->
+        <div class="card card-custom gutter-b card-stretch">
+            <!--begin::Header-->
+            <div class="card-header border-0 py-5">
+                <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label font-weight-bolder text-dark">@Html.Raw("Business Type")</span>
+                </h3>
+                <div class="card-toolbar">
+                    <a href="/@Html.Raw("BusinessType")/InsertOrUpdatePage" class="btn btn-light-primary font-weight-bolder btn-sm">@Html.Raw("Add New".Trans())</a>
+                </div>
+            </div>
+            <!--end::Header-->
+            <div class="card-body py-0">
+                <div class="table-responsive">
+                    <table id="dt_BusinessType" class="table table-bordered table-hover table-checkable">
+                        <thead>
+                            <tr>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+    $(function () {
+
+        getGrid();
+
+        function getGrid() {
+            var columns = [];
+            columns.push({ "data": "Parent", text: "Parent" });
+            columns.push({ "data": "Name", text: "Name" });
+
+            columns.push({ "data": "Detail", text: "Detail" });
+
+            $.each(columns, function (i, item) {
+                $('#dt_BusinessType' + ' thead tr').append('<td>' + item.text + '</td>');
+            });
+
+            var table = $('#dt_BusinessType').DataTable({ "language":{"url":"/Base/getDtLang"},
+                "ajax": {
+                    "url": '/BusinessType/GetPaging',
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (searchModel) {
+                        $('#dt_BusinessType').LoadingOverlay("show");
+                        searchModel.pagingSearchParam = 'Name';
+
+                    },
+                    "dataSrc": function (json) {
+                        return_data = new Array();
+                        var data = json.data;
+                        $.each(data, function (i, row) {
+                            ;
+                            var detail = '<a class="btn btn-sm btn-clean btn-icon btn-icon-md" href="/BusinessType/InsertOrUpdatePage?id=' + row.Id + '" title="Düzenle"><i class="la la-edit"></i></a>';
+                            return_data.push({
+                                'Parent': toStr(row.Parent?.Name),
+                                'Name': row.Name,
+                                'Detail': detail,
+                            });
+
+                        });
+                        $('#dt_BusinessType').LoadingOverlay("hide");
+                        return return_data;
+                    }
+                },
+                "fnDrawCallback": function (settings, json) {
+
+
+                    $('.dt-buttons').css('float', 'right');
+                    $('.dt-buttons').css('margin-left', '20px');
+                    $('.dt-buttons').css('margin-top', '16px');
+
+                    $(table).LoadingOverlay("hide");
+
+                },
+                "destroy": true,
+                "caseInsensitive": true,
+                "serverSide": true,
+                
+                "pageLength": 10,
+                "DisplayLength": 10,
+                "lengthMenu": [[10, 25, 100, 1000, 2500, 5000], [10, 25, 100, 1000, 2500, 5000]],
+                "lengthChange": true,
+                "processing": true,
+                "order": [[0, "desc"]],
+                "columns": columns,
+
+            });
+
+
+
+
+        }
+
+
+
+    });
+</script>

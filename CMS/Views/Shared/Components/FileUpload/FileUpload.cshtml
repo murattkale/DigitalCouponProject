@@ -1,0 +1,103 @@
+﻿@model PartnerDocument
+@addTagHelper *, Kendo.Mvc
+
+@{
+    Layout = null;
+}
+@if (Model.Camera == "Camera")
+{
+
+   
+}
+else
+{
+    @(Html.Kendo().Upload().Multiple(true)
+        .Messages(e => e.Select("Select Photo".Trans()))
+        .HtmlAttributes(new { accept = "image/*" })
+        .Name("files_"  + (int)Model.DocType + "_" + Model.PartnerId)
+
+        .Async(a => a
+                    .Save("CustomDropZone_Save", "FileUploadData", new { filigranImagePath = "", filigranText = "", PartnerId = Model.PartnerId })
+            .Remove("CustomDropZone_Remove", "FileUploadData")
+            .AutoUpload(true)
+        )
+        .Events(e =>
+        {
+            e.Success("onSuccess");
+            e.Complete("onComplete");
+            e.Upload("onUpload");
+        })
+        .ShowFileList(false)
+        .Validation(validation =>
+        {
+            //validation.AllowedExtensions(new string[] { ".JPG", ".JPEG", ".jpg", ".jpeg", ".PNG", ".png", ".BMP", ".bmp", ".GIF", ".gif" });
+            //validation.MinFileSize(500);
+        }))
+}
+
+
+<script type="text/javascript">
+
+    function onUpload(e) {
+        
+        console.log(e);
+    }
+    function onComplete(e) {
+        
+        console.log(e);
+    }
+    function onSuccess(e) {
+        
+        $.LoadingOverlay("show");
+        if (e.operation == "upload") {
+            var DocList = []
+            for (var i = 0; i < e.response.length; i++) {
+                //var file = e.files[i].rawFile;
+                var row = e.response[i];
+
+                if (row.FileSize.indexOf('Max size') != -1) {
+                    alerts(row.FileSize, 'ok');
+                    continue;
+                }
+                if (row) {
+
+                    var ImageType = $(this).attr('name').split('_')[1];
+                    var DocType = $(this).attr('name').split('_')[2];
+                    var PartnerId = $(this).attr('name').split('_')[3];
+
+                    row.ImageType = ImageType;
+                    row.DocType = DocType;
+                    row.PartnerId = PartnerId;
+                    DocList.push(row);
+                }
+            }
+
+
+            $.LoadingOverlay("hide");
+            //if (DocList.length < 1) {
+            //    $.LoadingOverlay("hide");
+            //    return;
+            //}
+
+         
+
+            $.post('/PartnerDocument/SaveMultiDoc', { DocList: DocList }).fail(function (err, exception) { console.log(err); })
+                .done(function (res) {
+                    $.LoadingOverlay("hide");
+                    if (res != null) {
+
+                        if (location.href.toLowerCase().indexOf('/hazard') > 0) {
+                            location.reload();
+                        }
+                        else {
+                            $("#frm_addproject").submit();
+                        }
+                    }
+                    else {
+                        console.error(res)
+                        alert(JSON.stringify(res));
+                    }
+                });
+        }
+    }
+</script>

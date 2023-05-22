@@ -1,0 +1,141 @@
+﻿@{
+    Layout = null;
+    var EnumText = "Contents";
+    var ContentTypes = Context.Request.Query["ContentTypes"].ToInt();
+    var elem = Context.Request.Query["elem"].ToStr();
+
+}
+
+<script type="text/javascript">
+    var ContentTypes = "@ContentTypes";
+    var elem = "@elem";
+</script>
+
+<!--begin::Content-->
+<!--begin::Subheader-->
+<div class="subheader py-2 py-lg-6 subheader-transparent" id="kt_subheader">
+    <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+        <!--begin::Info-->
+        <div class="d-flex align-items-center flex-wrap mr-2">
+            <!--begin::Page Title-->
+            <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">@Html.Raw(EnumText)</h5>
+            <!--end::Page Title-->
+            <!--begin::Action-->
+            <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
+            <span class="text-muted font-weight-bold mr-4">Page Information</span>
+            <!--end::Action-->
+        </div>
+        <!--end::Info-->
+
+    </div>
+</div>
+<!--end::Subheader-->
+<!--begin::Entry-->
+<div class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container-fluid">
+
+        <div class="card card-custom">
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+
+                                <div class="form-group row">
+                                    <label class="col-xl-3 col-lg-3 col-form-label">@Html.Raw("Content")</label>
+                                    <div class="col-lg-9 col-xl-9">
+                                        <div class="input-group ">
+                                            <select id="dp_ContentPageId" name="dp_ContentPageId" class="form-control form-control-lg form-control-solid"></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-xl-3 col-lg-3 col-form-label">@Html.Raw("Preview")</label>
+                                    <div class="col-lg-9 col-xl-9">
+                                        <div class="input-group ">
+                                            @(Html.Kendo().Editor()
+                                                          .Name("PreviewText")
+                                                          .HtmlAttributes(new { style = "width: 100%; height:200px", aria_label = "editor" })
+                                                          .Tools(tools => tools
+                                                            .Clear()
+                                                            .Bold().Italic().Underline()
+                                                            .JustifyLeft().JustifyCenter().JustifyRight()
+                                                            .InsertUnorderedList().InsertOrderedList()
+                                                            .Outdent().Indent()
+                                                            .CreateLink().Unlink()
+                                                            .InsertImage()
+                                                            .TableEditing()
+                                                            .FontName()
+                                                            .FontSize()
+                                                            .FontColor().BackColor()
+                                                          )
+                                                          .ImageBrowser(imageBrowser =>
+                                                          {
+                                                              imageBrowser.Image("~/fileupload/UserFiles/Folders/{0}");
+                                                              imageBrowser.Read("Read", "FileManagerData");
+                                                              imageBrowser.Create("Create", "FileManagerData");
+                                                              imageBrowser.Destroy("Destroy", "FileManagerData");
+                                                              imageBrowser.Upload("Upload", "FileManagerData");
+                                                              //imageBrowser.Thumbnail("Thumbnail", "FileManagerData");
+                                                          }
+                                                      ).Encoded(false)
+                                                      )
+                                            @*<textarea id="PreviewText" name="PreviewText" cols="5" rows="5" class="form-control form-control-solid form-control-lg"></textarea>*@
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="float-right btn_ContentPage btn btn-primary font-weight-bolder px-9 py-4">@Html.Raw("Attach")</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::Entry-->
+<!--end::Content-->
+
+
+
+<script>
+    $(function () {
+        GetContentPage(ContentTypes, 'dp_ContentPageId', 'text');
+
+        $(".btn_ContentPage").click(function (e) {
+            e.preventDefault();
+            var editor = $('[name="' + elem + '"]').data("kendoEditor");
+            var parser = new DOMParser;
+            var dom = parser.parseFromString($('[name="PreviewText"]').val(), 'text/html');
+            var decodedString = dom.body.textContent;
+            editor.value(decodedString);
+            CloseModal();
+        });
+
+        $('#dp_ContentPageId').change(function (e) {
+            $.LoadingOverlay("show");
+            $.get('/ContentPage/GetRow?id=' + $(this).val()).fail(function (err, exception) { console.error(err.responseText); })
+                .done(function (res) {
+                    var editor = $('[name="' + 'PreviewText' + '"]').data("kendoEditor");
+                    var parser = new DOMParser;
+                    var dom = parser.parseFromString(res.ResultRow.ContentData, 'text/html');
+                    var decodedString = dom.body.textContent;
+                    editor.value(decodedString);
+
+                    $.LoadingOverlay("hide");
+                });
+        });
+
+
+    })
+</script>
